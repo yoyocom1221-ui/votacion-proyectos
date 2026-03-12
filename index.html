@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
 <title>Votación de Proyectos</title>
 
@@ -11,79 +9,62 @@
 body{
 margin:0;
 font-family:Arial;
-
-background:
-linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-url("https://images.unsplash.com/photo-1529101091764-c3526daf38fe");
-
-background-size:cover;
-background-position:center;
-height:100vh;
-
 color:white;
 text-align:center;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+background-image:url("https://images.unsplash.com/photo-1529107386315-e1a2ed48a620");
+background-size:cover;
+background-position:center;
 }
 
-nav{
-background:#002D62;
-padding:15px;
-}
-
-nav a{
-color:white;
-margin:20px;
-text-decoration:none;
-font-weight:bold;
-}
-
-.inicio{
-margin-top:200px;
+body::before{
+content:"";
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+backdrop-filter:blur(5px);
+z-index:-1;
 }
 
 h1{
-font-size:60px;
+font-size:50px;
+margin-bottom:40px;
 }
 
 button{
 padding:15px 30px;
 font-size:18px;
-background:#00b894;
 border:none;
-color:white;
-border-radius:8px;
+border-radius:10px;
 cursor:pointer;
+background:#4285F4;
+color:white;
+}
+
+button:hover{
+background:#3367D6;
 }
 
 </style>
 
 </head>
-
 <body>
-
-<nav>
-
-<a href="index.html">Inicio</a>
-<a href="proyectos.html">Proyectos</a>
-<a href="resultados.html">Resultados</a>
-
-</nav>
-
-<div class="inicio">
 
 <h1>Bienvenidos Distinguidos Senadores</h1>
 
-<button id="login">
-Iniciar sesión con Google
-</button>
-
-</div>
+<button onclick="login()">Iniciar sesión con Google</button>
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
-import { getAuth, GoogleAuthProvider, signInWithPopup }
-from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDGAwKQ8FMESpKcAHzglPXZ2lqJarVmvOc",
@@ -91,39 +72,36 @@ const firebaseConfig = {
   projectId: "votacion-proyectos",
   storageBucket: "votacion-proyectos.firebasestorage.app",
   messagingSenderId: "959121228114",
-  appId: "1:959121228114:web:f69b6e27abd4a177a17a8b"
+  appId: "1:959121228114:web:f69b6e27abd4a177a17a8b",
+  measurementId: "G-CLNSBGLSR2"
 };
 
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
-
 const provider = new GoogleAuthProvider();
 
-const loginBtn = document.getElementById("login");
+window.login = function(){
 
-loginBtn.addEventListener("click", async () => {
-
-try {
-
-const result = await signInWithPopup(auth, provider);
+signInWithPopup(auth, provider)
+.then((result)=>{
 
 const user = result.user;
 
 alert("Bienvenido " + user.displayName);
 
-} catch(error){
+window.location.href="proyectos.html";
 
-console.error(error);
+})
+.catch((error)=>{
 
+console.error("Error de inicio:", error);
 alert("Error al iniciar sesión");
 
-}
-
 });
+
+}
 
 </script>
 
 </body>
-
 </html>
