@@ -1,19 +1,40 @@
 <h1>Proyectos</h1>
 
 <div>
-
 <h2>Proyecto 1</h2>
-
-<button>Ver proyecto</button>
+<button onclick="verProyecto('docs/proyecto1.docx')">Ver proyecto</button>
 <button>Aprobar este proyecto</button>
-
 </div>
 
 <div>
-
 <h2>Proyecto 2</h2>
-
-<button>Ver proyecto</button>
+<button onclick="verProyecto('docs/proyecto2.docx')">Ver proyecto</button>
 <button>Aprobar este proyecto</button>
-
 </div>
+
+<div>
+<h2>Proyecto 3</h2>
+<button onclick="verProyecto('docs/proyecto3.docx')">Ver proyecto</button>
+<button>Aprobar este proyecto</button>
+</div>
+
+<div>
+<h2>Proyecto 4</h2>
+<button onclick="verProyecto('docs/proyecto4.docx')">Ver proyecto</button>
+<button>Aprobar este proyecto</button>
+</div>
+
+<div>
+<h2>Proyecto 5</h2>
+<button onclick="verProyecto('docs/proyecto5.docx')">Ver proyecto</button>
+<button>Aprobar este proyecto</button>
+</div>
+
+<div id="visor"></div>
+
+<script>
+function verProyecto(doc){
+document.getElementById("visor").innerHTML =
+`<iframe src="${doc}" width="100%" height="500"></iframe>`;
+}
+</script>
