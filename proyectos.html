@@ -75,21 +75,26 @@ let usuario = localStorage.getItem("provincia");
 if(!usuario){ alert("Debes iniciar sesión"); location.href="index.html"; }
 else document.getElementById("usuario").innerHTML = usuario + ' | <button onclick="cerrarSesion()">Cerrar sesión</button>';
 
-function cerrarSesion(){ localStorage.removeItem("provincia"); location.href="index.html"; }
-function verDoc(archivo){ window.open(archivo); }
+// FUNCIONES GLOBALES PARA BOTONES
+window.cerrarSesion = function() {
+  localStorage.removeItem("provincia");
+  location.href="index.html";
+}
 
-async function votar(proyecto){
+window.verDoc = function(archivo) {
+  window.open(archivo);
+}
+
+window.votar = async function(proyecto){
   const docRef = doc(db,"votos",proyecto);
   const docSnap = await getDoc(docRef);
   let votos = docSnap.exists() ? docSnap.data().usuarios : [];
-  if(votos.includes(usuario)){
-    alert("Ya votaste este proyecto"); return;
-  }
+  if(votos.includes(usuario)){ alert("Ya votaste este proyecto"); return; }
   await updateDoc(docRef,{usuarios: arrayUnion(usuario)});
   alert("Voto registrado ✅");
 }
 
-// Bloquear botones de los que ya votaron y escuchar cambios en tiempo real
+// BLOQUEAR BOTONES SI YA VOTASTE Y ESCUCHAR CAMBIOS EN TIEMPO REAL
 const proyectos = ["pae","indigentes","empleo","exoneracion","militar"];
 proyectos.forEach(p=>{
   const docRef = doc(db,"votos",p);
