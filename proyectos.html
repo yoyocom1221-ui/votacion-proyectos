@@ -36,6 +36,7 @@ border-radius:10px;
 
 button{
 padding:10px 20px;
+margin:5px;
 background:#00b894;
 border:none;
 color:white;
@@ -67,17 +68,46 @@ border-radius:5px;
 
 <div class="proyecto">
 
-<h2>Servicio Militar Obligatorio</h2>
+<h2>PAE proyecto de acogida para niños especiales</h2>
 
-<button onclick="votar('militar')">Aprobar</button>
+<button onclick="verDoc('PAE.docx')">Ver Proyecto</button>
+<button onclick="votar('pae')">Aprobar</button>
 
 </div>
 
 <div class="proyecto">
 
-<h2>Proyecto Educación Nacional</h2>
+<h2>Proyecto de prevención y acogida para niños y niñas indigentes</h2>
 
-<button onclick="votar('educacion')">Aprobar</button>
+<button onclick="verDoc('indigentes.docx')">Ver Proyecto</button>
+<button onclick="votar('indigentes')">Aprobar</button>
+
+</div>
+
+<div class="proyecto">
+
+<h2>Empleo Digno y Primera Inserción Laboral</h2>
+
+<button onclick="verDoc('empleo.docx')">Ver Proyecto</button>
+<button onclick="votar('empleo')">Aprobar</button>
+
+</div>
+
+<div class="proyecto">
+
+<h2>Proyecto de Exoneración Estudiantil</h2>
+
+<button onclick="verDoc('exoneracion.docx')">Ver Proyecto</button>
+<button onclick="votar('exoneracion')">Aprobar</button>
+
+</div>
+
+<div class="proyecto">
+
+<h2>Servicio Militar Obligatorio Para Jóvenes</h2>
+
+<button onclick="verDoc('militar.docx')">Ver Proyecto</button>
+<button onclick="votar('militar')">Aprobar</button>
 
 </div>
 
@@ -113,7 +143,6 @@ let votos = JSON.parse(localStorage.getItem(proyecto)) || [];
 if(votos.includes(usuario)){
 
 alert("Ya votaste este proyecto");
-
 return;
 
 }
@@ -123,6 +152,12 @@ votos.push(usuario);
 localStorage.setItem(proyecto, JSON.stringify(votos));
 
 alert("Voto registrado");
+
+}
+
+function verDoc(archivo){
+
+window.open(archivo);
 
 }
 
