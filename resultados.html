@@ -35,7 +35,7 @@ button{padding:10px 20px;background:red;border:none;color:white;cursor:pointer;b
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDGAwKQ8FMESpKcAHzglPXZ2lqJarVmvOc",
@@ -52,9 +52,10 @@ const db = getFirestore(app);
 let usuario = localStorage.getItem("provincia");
 if(usuario) document.getElementById("usuario").innerHTML = usuario + ' | <button onclick="cerrarSesion()">Cerrar sesión</button>';
 
-function cerrarSesion(){ localStorage.removeItem("provincia"); location.href="index.html"; }
+// FUNCIONES GLOBALES PARA BOTONES
+window.cerrarSesion = function(){ localStorage.removeItem("provincia"); location.href="index.html"; }
 
-async function borrarVotos(){
+window.borrarVotos = async function(){
   const proyectos = ["pae","indigentes","empleo","exoneracion","militar"];
   for(let p of proyectos){
     const docRef = doc(db,"votos",p);
@@ -63,7 +64,7 @@ async function borrarVotos(){
   alert("Votos eliminados ✅");
 }
 
-// Mostrar resultados en tiempo real
+// MOSTRAR RESULTADOS EN TIEMPO REAL
 const proyectos = ["pae","indigentes","empleo","exoneracion","militar"];
 proyectos.forEach(p=>{
   const docRef = doc(db,"votos",p);
