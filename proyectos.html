@@ -1,54 +1,46 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
+
 <meta charset="UTF-8">
 <title>Proyectos</title>
 
 <style>
 
 body{
-margin:0;
 font-family:Arial;
-
-background:
-linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-url("https://images.unsplash.com/photo-1529101091764-c3526daf38fe");
-
-background-size:cover;
-background-position:center;
-color:white;
+background:#f2f2f2;
 text-align:center;
 }
 
 nav{
 background:#002D62;
 padding:15px;
+display:flex;
+justify-content:space-between;
 }
 
 nav a{
 color:white;
-margin:20px;
+margin:10px;
 text-decoration:none;
 font-weight:bold;
 }
 
 .proyecto{
-background:rgba(0,0,0,0.6);
+background:white;
 padding:20px;
-margin:20px auto;
-width:300px;
+margin:20px;
 border-radius:10px;
 }
 
 button{
 padding:10px 20px;
-margin:5px;
-border:none;
-border-radius:5px;
 background:#00b894;
+border:none;
 color:white;
 cursor:pointer;
+border-radius:5px;
 }
 
 </style>
@@ -58,50 +50,80 @@ cursor:pointer;
 <body>
 
 <nav>
+
+<div>
+
 <a href="index.html">Inicio</a>
 <a href="proyectos.html">Proyectos</a>
 <a href="resultados.html">Resultados</a>
+
+</div>
+
+<div id="usuario"></div>
+
 </nav>
 
-<h1>Proyectos</h1>
+<h1>Proyectos a Votar</h1>
 
 <div class="proyecto">
-<h2>Proyecto 1</h2>
-<button onclick="verProyecto('docs/proyecto1.docx')">Ver proyecto</button>
-<button>Aprobar este proyecto</button>
+
+<h2>Servicio Militar Obligatorio</h2>
+
+<button onclick="votar('militar')">Aprobar</button>
+
 </div>
 
 <div class="proyecto">
-<h2>Proyecto 2</h2>
-<button onclick="verProyecto('docs/proyecto2.docx')">Ver proyecto</button>
-<button>Aprobar este proyecto</button>
-</div>
 
-<div class="proyecto">
-<h2>Proyecto 3</h2>
-<button onclick="verProyecto('docs/proyecto3.docx')">Ver proyecto</button>
-<button>Aprobar este proyecto</button>
-</div>
+<h2>Proyecto Educación Nacional</h2>
 
-<div class="proyecto">
-<h2>Proyecto 4</h2>
-<button onclick="verProyecto('docs/proyecto4.docx')">Ver proyecto</button>
-<button>Aprobar este proyecto</button>
-</div>
+<button onclick="votar('educacion')">Aprobar</button>
 
-<div class="proyecto">
-<h2>Proyecto 5</h2>
-<button onclick="verProyecto('docs/proyecto5.docx')">Ver proyecto</button>
-<button>Aprobar este proyecto</button>
 </div>
-
-<div id="visor"></div>
 
 <script>
 
-function verProyecto(doc){
-document.getElementById("visor").innerHTML =
-`<iframe src="${doc}" width="80%" height="500"></iframe>`;
+let usuario = localStorage.getItem("provincia");
+
+if(usuario){
+
+document.getElementById("usuario").innerHTML =
+usuario + ' | <button onclick="cerrarSesion()">Cerrar sesión</button>';
+
+}else{
+
+alert("Debes iniciar sesión");
+
+location.href="index.html";
+
+}
+
+function cerrarSesion(){
+
+localStorage.removeItem("provincia");
+
+location.href="index.html";
+
+}
+
+function votar(proyecto){
+
+let votos = JSON.parse(localStorage.getItem(proyecto)) || [];
+
+if(votos.includes(usuario)){
+
+alert("Ya votaste este proyecto");
+
+return;
+
+}
+
+votos.push(usuario);
+
+localStorage.setItem(proyecto, JSON.stringify(votos));
+
+alert("Voto registrado");
+
 }
 
 </script>
