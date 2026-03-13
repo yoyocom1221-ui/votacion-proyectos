@@ -72,18 +72,21 @@ cursor:pointer;
 
 <h1>Bienvenidos Distinguidos Senadores</h1>
 
-<button onclick="iniciarSesion()">Iniciar sesión</button>
+<button id="loginBtn" onclick="iniciarSesion()">Iniciar sesión</button>
 
 </div>
 
 <script>
 
 let usuario = localStorage.getItem("provincia");
+let loginBtn = document.getElementById("loginBtn");
 
 if(usuario){
 
 document.getElementById("usuario").innerHTML =
 usuario + ' | <button onclick="cerrarSesion()">Cerrar sesión</button>';
+
+loginBtn.style.display = "none";
 
 }
 
@@ -91,9 +94,13 @@ function iniciarSesion(){
 
 let provincia = prompt("Escribe tu provincia");
 
+if(provincia){
+
 localStorage.setItem("provincia", provincia);
 
 location.reload();
+
+}
 
 }
 
