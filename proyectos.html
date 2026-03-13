@@ -28,38 +28,38 @@ button:disabled{background:gray;cursor:not-allowed;}
 <div class="proyecto">
 <h2>PAE proyecto de acogida para niños especiales</h2>
 <button onclick="verDoc('PAE.docx')">Ver Proyecto</button>
-<button id="btn-pae" onclick="votar('pae')">Aprobar</button>
+<button id="btn-pae" data-proyecto="pae">Aprobar</button>
 </div>
 
 <div class="proyecto">
 <h2>Proyecto de prevención y acogida para niños y niñas indigentes</h2>
 <button onclick="verDoc('indigentes.docx')">Ver Proyecto</button>
-<button id="btn-indigentes" onclick="votar('indigentes')">Aprobar</button>
+<button id="btn-indigentes" data-proyecto="indigentes">Aprobar</button>
 </div>
 
 <div class="proyecto">
 <h2>Empleo Digno y Primera Inserción Laboral</h2>
 <button onclick="verDoc('empleo.docx')">Ver Proyecto</button>
-<button id="btn-empleo" onclick="votar('empleo')">Aprobar</button>
+<button id="btn-empleo" data-proyecto="empleo">Aprobar</button>
 </div>
 
 <div class="proyecto">
 <h2>Proyecto de Exoneración Estudiantil</h2>
 <button onclick="verDoc('exoneracion.docx')">Ver Proyecto</button>
-<button id="btn-exoneracion" onclick="votar('exoneracion')">Aprobar</button>
+<button id="btn-exoneracion" data-proyecto="exoneracion">Aprobar</button>
 </div>
 
 <div class="proyecto">
 <h2>Servicio Militar Obligatorio Para Jóvenes</h2>
 <button onclick="verDoc('militar.docx')">Ver Proyecto</button>
-<button id="btn-militar" onclick="votar('militar')">Aprobar</button>
+<button id="btn-militar" data-proyecto="militar">Aprobar</button>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, doc, getDoc, updateDoc, arrayUnion, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Inicializar Firebase
+// Config Firebase
 const firebaseConfig = {
   apiKey: "AIzaSyDGAwKQ8FMESpKcAHzglPXZ2lqJarVmvOc",
   authDomain: "votacion-proyectos.firebaseapp.com",
@@ -77,35 +77,42 @@ let usuario = localStorage.getItem("provincia");
 if(!usuario){ alert("Debes iniciar sesión"); location.href="index.html"; }
 else document.getElementById("usuario").innerHTML = usuario + ' | <button onclick="cerrarSesion()">Cerrar sesión</button>';
 
-// Funciones globales para botones
-window.cerrarSesion = function(){
-  localStorage.removeItem("provincia");
-  location.href="index.html";
-}
+// Funciones globales
+window.cerrarSesion = function(){ localStorage.removeItem("provincia"); location.href="index.html"; }
 window.verDoc = function(archivo){ window.open(archivo); }
-window.votar = async function(proyecto){
+
+// Función votar
+async function votarProyecto(proyecto, boton){
   const docRef = doc(db,"votos",proyecto);
+  const docSnap = await getDoc(docRef);
 
   // Crear documento si no existe
-  const docSnap = await getDoc(docRef);
-  if(!docSnap.exists()){
-    await setDoc(docRef,{usuarios: []});
-  }
+  if(!docSnap.exists()) await setDoc(docRef,{usuarios: []});
 
-  let votos = docSnap.exists() ? docSnap.data().usuarios : [];
-  if(votos.includes(usuario)){ alert("Ya votaste este proyecto"); return; }
+  const votosActuales = (docSnap.exists() ? docSnap.data().usuarios : []);
+  if(votosActuales.includes(usuario)){
+    alert("Ya votaste este proyecto");
+    return;
+  }
 
   await updateDoc(docRef,{usuarios: arrayUnion(usuario)});
   alert("Voto registrado ✅");
+  boton.disabled = true; // desactiva botón inmediatamente
 }
 
-// Escuchar cambios en tiempo real y bloquear botón si ya votaste
+// Agregar listener a todos los botones "Aprobar"
+document.querySelectorAll("button[data-proyecto]").forEach(btn=>{
+  const proyecto = btn.getAttribute("data-proyecto");
+  btn.addEventListener("click", ()=>votarProyecto(proyecto, btn));
+});
+
+// Bloquear botones si ya votaste y escuchar cambios en tiempo real
 const proyectos = ["pae","indigentes","empleo","exoneracion","militar"];
 proyectos.forEach(p=>{
   const docRef = doc(db,"votos",p);
   onSnapshot(docRef,(docSnap)=>{
-    let votos = docSnap.exists() ? docSnap.data().usuarios : [];
-    const btn = document.getElementById("btn-" + p);
+    const votos = docSnap.exists() ? docSnap.data().usuarios : [];
+    const btn = document.querySelector(`button[data-proyecto="${p}"]`);
     if(votos.includes(usuario)) btn.disabled = true;
   });
 });
