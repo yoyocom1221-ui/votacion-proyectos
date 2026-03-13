@@ -10,6 +10,7 @@ nav a{color:white;margin:10px;text-decoration:none;font-weight:bold;}
 .proyecto{background:white;padding:20px;margin:20px;border-radius:10px;}
 button{padding:10px 20px;margin:5px;background:#00b894;border:none;color:white;cursor:pointer;border-radius:5px;}
 button:disabled{background:gray;cursor:not-allowed;}
+#votos{margin-top:10px;color:#002D62;font-weight:bold;}
 </style>
 </head>
 <body>
@@ -27,32 +28,32 @@ button:disabled{background:gray;cursor:not-allowed;}
 
 <div class="proyecto">
 <h2>PAE proyecto de acogida para niños especiales</h2>
-<button onclick="verDoc('PAE.docx')">Ver Proyecto</button>
 <button id="btn-pae" data-proyecto="pae">Aprobar</button>
+<p id="votos-pae"></p>
 </div>
 
 <div class="proyecto">
 <h2>Proyecto de prevención y acogida para niños y niñas indigentes</h2>
-<button onclick="verDoc('indigentes.docx')">Ver Proyecto</button>
 <button id="btn-indigentes" data-proyecto="indigentes">Aprobar</button>
+<p id="votos-indigentes"></p>
 </div>
 
 <div class="proyecto">
 <h2>Empleo Digno y Primera Inserción Laboral</h2>
-<button onclick="verDoc('empleo.docx')">Ver Proyecto</button>
 <button id="btn-empleo" data-proyecto="empleo">Aprobar</button>
+<p id="votos-empleo"></p>
 </div>
 
 <div class="proyecto">
 <h2>Proyecto de Exoneración Estudiantil</h2>
-<button onclick="verDoc('exoneracion.docx')">Ver Proyecto</button>
 <button id="btn-exoneracion" data-proyecto="exoneracion">Aprobar</button>
+<p id="votos-exoneracion"></p>
 </div>
 
 <div class="proyecto">
 <h2>Servicio Militar Obligatorio Para Jóvenes</h2>
-<button onclick="verDoc('militar.docx')">Ver Proyecto</button>
 <button id="btn-militar" data-proyecto="militar">Aprobar</button>
+<p id="votos-militar"></p>
 </div>
 
 <script type="module">
@@ -79,14 +80,12 @@ else document.getElementById("usuario").innerHTML = usuario + ' | <button onclic
 
 // Funciones globales
 window.cerrarSesion = function(){ localStorage.removeItem("provincia"); location.href="index.html"; }
-window.verDoc = function(archivo){ window.open(archivo); }
 
 // Función votar
 async function votarProyecto(proyecto, boton){
   const docRef = doc(db,"votos",proyecto);
   const docSnap = await getDoc(docRef);
 
-  // Crear documento si no existe
   if(!docSnap.exists()) await setDoc(docRef,{usuarios: []});
 
   const votosActuales = (docSnap.exists() ? docSnap.data().usuarios : []);
@@ -97,7 +96,7 @@ async function votarProyecto(proyecto, boton){
 
   await updateDoc(docRef,{usuarios: arrayUnion(usuario)});
   alert("Voto registrado ✅");
-  boton.disabled = true; // desactiva botón inmediatamente
+  boton.disabled = true;
 }
 
 // Agregar listener a todos los botones "Aprobar"
@@ -106,7 +105,7 @@ document.querySelectorAll("button[data-proyecto]").forEach(btn=>{
   btn.addEventListener("click", ()=>votarProyecto(proyecto, btn));
 });
 
-// Bloquear botones si ya votaste y escuchar cambios en tiempo real
+// Mostrar votos en tiempo real y bloquear botón si ya votaste
 const proyectos = ["pae","indigentes","empleo","exoneracion","militar"];
 proyectos.forEach(p=>{
   const docRef = doc(db,"votos",p);
@@ -114,6 +113,10 @@ proyectos.forEach(p=>{
     const votos = docSnap.exists() ? docSnap.data().usuarios : [];
     const btn = document.querySelector(`button[data-proyecto="${p}"]`);
     if(votos.includes(usuario)) btn.disabled = true;
+
+    // Mostrar número de votos y usuarios
+    const pVotos = document.getElementById("votos-" + p);
+    pVotos.innerHTML = `Votos: ${votos.length} <br> ${votos.join("<br>")}`;
   });
 });
 </script>
