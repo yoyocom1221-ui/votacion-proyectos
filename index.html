@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
 
 <meta charset="UTF-8">
@@ -11,12 +10,7 @@
 body{
 margin:0;
 font-family:Arial;
-background:
-linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-url("https://images.unsplash.com/photo-1529101091764-c3526daf38fe");
-background-size:cover;
-background-position:center;
-height:100vh;
+background:#111;
 color:white;
 text-align:center;
 }
@@ -26,26 +20,22 @@ background:#002D62;
 padding:15px;
 display:flex;
 justify-content:space-between;
-align-items:center;
 }
 
 nav a{
 color:white;
-margin:20px;
 text-decoration:none;
+margin:10px;
 font-weight:bold;
 }
 
-#userBox{
-margin-right:20px;
+#usuario button{
+padding:5px 10px;
+cursor:pointer;
 }
 
 .inicio{
-margin-top:200px;
-}
-
-h1{
-font-size:60px;
+margin-top:150px;
 }
 
 button{
@@ -58,16 +48,6 @@ border-radius:8px;
 cursor:pointer;
 }
 
-#formProvincia{
-display:none;
-margin-top:40px;
-}
-
-input{
-padding:10px;
-font-size:18px;
-}
-
 </style>
 
 </head>
@@ -77,12 +57,14 @@ font-size:18px;
 <nav>
 
 <div>
+
 <a href="index.html">Inicio</a>
 <a href="proyectos.html">Proyectos</a>
 <a href="resultados.html">Resultados</a>
+
 </div>
 
-<div id="userBox"></div>
+<div id="usuario"></div>
 
 </nav>
 
@@ -90,119 +72,34 @@ font-size:18px;
 
 <h1>Bienvenidos Distinguidos Senadores</h1>
 
-<button id="login">Iniciar sesión con Google</button>
-
-<div id="formProvincia">
-
-<h2>Establece tu provincia</h2>
-
-<input type="text" id="provincia" placeholder="Ej: Santo Domingo">
-
-<br><br>
-
-<button id="guardarProvincia">Guardar</button>
+<button onclick="iniciarSesion()">Iniciar sesión</button>
 
 </div>
 
-</div>
+<script>
 
-<script type="module">
+let usuario = localStorage.getItem("provincia");
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+if(usuario){
 
-import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut }
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import { getFirestore, doc, setDoc, getDoc }
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-
-apiKey: "AIzaSyDGAwKQ8FMESpKcAHzglPXZ2lqJarVmvOc",
-
-authDomain: "votacion-proyectos.firebaseapp.com",
-
-projectId: "votacion-proyectos",
-
-storageBucket: "votacion-proyectos.firebasestorage.app",
-
-messagingSenderId: "959121228114",
-
-appId: "1:959121228114:web:f69b6e27abd4a177a17a8b"
-
-};
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-const db = getFirestore(app);
-
-const provider = new GoogleAuthProvider();
-
-const loginBtn = document.getElementById("login");
-
-const provinciaForm = document.getElementById("formProvincia");
-
-const provinciaInput = document.getElementById("provincia");
-
-const guardarProvincia = document.getElementById("guardarProvincia");
-
-const userBox = document.getElementById("userBox");
-
-loginBtn.onclick = async ()=>{
-
-await signInWithPopup(auth,provider);
+document.getElementById("usuario").innerHTML =
+usuario + ' | <button onclick="cerrarSesion()">Cerrar sesión</button>';
 
 }
 
-onAuthStateChanged(auth, async (user)=>{
+function iniciarSesion(){
 
-if(user){
+let provincia = prompt("Escribe tu provincia");
 
-loginBtn.style.display="none";
+localStorage.setItem("provincia", provincia);
 
-const ref = doc(db,"usuarios",user.uid);
-
-const snap = await getDoc(ref);
-
-if(snap.exists()){
-
-const provincia = snap.data().provincia;
-
-userBox.innerHTML = provincia + " | <button id='logout'>Salir</button>";
-
-document.getElementById("logout").onclick=()=>signOut(auth);
-
-}else{
-
-provinciaForm.style.display="block";
+location.reload();
 
 }
 
-}else{
+function cerrarSesion(){
 
-loginBtn.style.display="block";
-
-userBox.innerHTML="";
-
-}
-
-});
-
-guardarProvincia.onclick = async ()=>{
-
-const user = auth.currentUser;
-
-const provincia = provinciaInput.value;
-
-await setDoc(doc(db,"usuarios",user.uid),{
-
-provincia: provincia
-
-});
+localStorage.removeItem("provincia");
 
 location.reload();
 
@@ -211,5 +108,4 @@ location.reload();
 </script>
 
 </body>
-
 </html>
