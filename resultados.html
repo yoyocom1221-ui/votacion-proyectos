@@ -12,6 +12,7 @@ button{padding:10px 20px;background:red;border:none;color:white;cursor:pointer;b
 </style>
 </head>
 <body>
+
 <nav>
 <div>
 <a href="index.html">Inicio</a>
@@ -34,7 +35,7 @@ button{padding:10px 20px;background:red;border:none;color:white;cursor:pointer;b
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, doc, getDoc, updateDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDGAwKQ8FMESpKcAHzglPXZ2lqJarVmvOc",
@@ -53,27 +54,25 @@ if(usuario) document.getElementById("usuario").innerHTML = usuario + ' | <button
 
 function cerrarSesion(){ localStorage.removeItem("provincia"); location.href="index.html"; }
 
-async function mostrarResultados(){
-  const proyectos = ["pae","indigentes","empleo","exoneracion","militar"];
-  for(let p of proyectos){
-    const docRef = doc(db,"votos",p);
-    const docSnap = await getDoc(docRef);
-    let votos = docSnap.exists() ? docSnap.data().usuarios : [];
-    document.getElementById(p).innerHTML = "Votos: " + votos.length + "<br>" + votos.join("<br>");
-  }
-}
-
 async function borrarVotos(){
   const proyectos = ["pae","indigentes","empleo","exoneracion","militar"];
   for(let p of proyectos){
     const docRef = doc(db,"votos",p);
-    await setDoc(docRef, {usuarios: []}, {merge:true});
+    await setDoc(docRef,{usuarios: []},{merge:true});
   }
-  alert("Votos eliminados");
-  location.reload();
+  alert("Votos eliminados ✅");
 }
 
-mostrarResultados();
+// Mostrar resultados en tiempo real
+const proyectos = ["pae","indigentes","empleo","exoneracion","militar"];
+proyectos.forEach(p=>{
+  const docRef = doc(db,"votos",p);
+  onSnapshot(docRef,(docSnap)=>{
+    let votos = docSnap.exists() ? docSnap.data().usuarios : [];
+    document.getElementById(p).innerHTML = "Votos: " + votos.length + "<br>" + votos.join("<br>");
+  });
+});
 </script>
+
 </body>
 </html>
