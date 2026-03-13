@@ -3,13 +3,15 @@
 <head>
 
 <meta charset="UTF-8">
-<title>Proyectos</title>
+<title>Votación de Proyectos</title>
 
 <style>
 
 body{
+margin:0;
 font-family:Arial;
-background:#f2f2f2;
+background:#111;
+color:white;
 text-align:center;
 }
 
@@ -22,26 +24,28 @@ justify-content:space-between;
 
 nav a{
 color:white;
-margin:10px;
 text-decoration:none;
+margin:10px;
 font-weight:bold;
 }
 
-.proyecto{
-background:white;
-padding:20px;
-margin:20px;
-border-radius:10px;
+#usuario button{
+padding:5px 10px;
+cursor:pointer;
+}
+
+.inicio{
+margin-top:150px;
 }
 
 button{
-padding:10px 20px;
-margin:5px;
+padding:15px 30px;
+font-size:18px;
 background:#00b894;
 border:none;
 color:white;
+border-radius:8px;
 cursor:pointer;
-border-radius:5px;
 }
 
 </style>
@@ -64,67 +68,39 @@ border-radius:5px;
 
 </nav>
 
-<h1>Proyectos a Votar</h1>
+<div class="inicio">
 
-<div class="proyecto">
+<h1>Bienvenidos Distinguidos Senadores</h1>
 
-<h2>PAE proyecto de acogida para niños especiales</h2>
-
-<button onclick="verDoc('PAE.docx')">Ver Proyecto</button>
-<button onclick="votar('pae')">Aprobar</button>
-
-</div>
-
-<div class="proyecto">
-
-<h2>Proyecto de prevención y acogida para niños y niñas indigentes</h2>
-
-<button onclick="verDoc('indigentes.docx')">Ver Proyecto</button>
-<button onclick="votar('indigentes')">Aprobar</button>
-
-</div>
-
-<div class="proyecto">
-
-<h2>Empleo Digno y Primera Inserción Laboral</h2>
-
-<button onclick="verDoc('empleo.docx')">Ver Proyecto</button>
-<button onclick="votar('empleo')">Aprobar</button>
-
-</div>
-
-<div class="proyecto">
-
-<h2>Proyecto de Exoneración Estudiantil</h2>
-
-<button onclick="verDoc('exoneracion.docx')">Ver Proyecto</button>
-<button onclick="votar('exoneracion')">Aprobar</button>
-
-</div>
-
-<div class="proyecto">
-
-<h2>Servicio Militar Obligatorio Para Jóvenes</h2>
-
-<button onclick="verDoc('militar.docx')">Ver Proyecto</button>
-<button onclick="votar('militar')">Aprobar</button>
+<button id="loginBtn" onclick="iniciarSesion()">Iniciar sesión</button>
 
 </div>
 
 <script>
 
 let usuario = localStorage.getItem("provincia");
+let loginBtn = document.getElementById("loginBtn");
 
 if(usuario){
 
 document.getElementById("usuario").innerHTML =
 usuario + ' | <button onclick="cerrarSesion()">Cerrar sesión</button>';
 
-}else{
+loginBtn.style.display = "none";
 
-alert("Debes iniciar sesión");
+}
 
-location.href="index.html";
+function iniciarSesion(){
+
+let provincia = prompt("Escribe tu provincia");
+
+if(provincia){
+
+localStorage.setItem("provincia", provincia);
+
+location.reload();
+
+}
 
 }
 
@@ -132,32 +108,7 @@ function cerrarSesion(){
 
 localStorage.removeItem("provincia");
 
-location.href="index.html";
-
-}
-
-function votar(proyecto){
-
-let votos = JSON.parse(localStorage.getItem(proyecto)) || [];
-
-if(votos.includes(usuario)){
-
-alert("Ya votaste este proyecto");
-return;
-
-}
-
-votos.push(usuario);
-
-localStorage.setItem(proyecto, JSON.stringify(votos));
-
-alert("Voto registrado");
-
-}
-
-function verDoc(archivo){
-
-window.open(archivo);
+location.reload();
 
 }
 
