@@ -1,43 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
+
 <meta charset="UTF-8">
 <title>Resultados</title>
 
 <style>
 
 body{
-margin:0;
 font-family:Arial;
-
-background:
-linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-url("https://images.unsplash.com/photo-1529101091764-c3526daf38fe");
-
-background-size:cover;
-background-position:center;
-color:white;
 text-align:center;
+background:#f2f2f2;
 }
 
 nav{
 background:#002D62;
 padding:15px;
+display:flex;
+justify-content:space-between;
 }
 
 nav a{
 color:white;
-margin:20px;
+margin:10px;
 text-decoration:none;
 font-weight:bold;
 }
 
 .resultado{
-background:rgba(0,0,0,0.6);
+background:white;
 padding:20px;
-margin:20px auto;
-width:300px;
+margin:20px;
 border-radius:10px;
 }
 
@@ -48,47 +41,67 @@ border-radius:10px;
 <body>
 
 <nav>
+
+<div>
+
 <a href="index.html">Inicio</a>
 <a href="proyectos.html">Proyectos</a>
 <a href="resultados.html">Resultados</a>
+
+</div>
+
+<div id="usuario"></div>
+
 </nav>
 
-<h1>Resultados de la votación</h1>
+<h1>Resultados de Votación</h1>
 
 <div class="resultado">
-<h2>Proyecto 1</h2>
-<p>Cantidad de votos: 0</p>
-<p>Quien votó:</p>
-<p>Aún sin votos</p>
+
+<h2>Servicio Militar Obligatorio</h2>
+
+<p id="militar"></p>
+
 </div>
 
 <div class="resultado">
-<h2>Proyecto 2</h2>
-<p>Cantidad de votos: 0</p>
-<p>Quien votó:</p>
-<p>Aún sin votos</p>
+
+<h2>Proyecto Educación Nacional</h2>
+
+<p id="educacion"></p>
+
 </div>
 
-<div class="resultado">
-<h2>Proyecto 3</h2>
-<p>Cantidad de votos: 0</p>
-<p>Quien votó:</p>
-<p>Aún sin votos</p>
-</div>
+<script>
 
-<div class="resultado">
-<h2>Proyecto 4</h2>
-<p>Cantidad de votos: 0</p>
-<p>Quien votó:</p>
-<p>Aún sin votos</p>
-</div>
+let usuario = localStorage.getItem("provincia");
 
-<div class="resultado">
-<h2>Proyecto 5</h2>
-<p>Cantidad de votos: 0</p>
-<p>Quien votó:</p>
-<p>Aún sin votos</p>
-</div>
+if(usuario){
+
+document.getElementById("usuario").innerHTML =
+usuario + ' | <button onclick="cerrarSesion()">Cerrar sesión</button>';
+
+}
+
+function cerrarSesion(){
+
+localStorage.removeItem("provincia");
+
+location.href="index.html";
+
+}
+
+let militar = JSON.parse(localStorage.getItem("militar")) || [];
+
+let educacion = JSON.parse(localStorage.getItem("educacion")) || [];
+
+document.getElementById("militar").innerHTML =
+"Votos: " + militar.length + "<br>" + militar.join("<br>");
+
+document.getElementById("educacion").innerHTML =
+"Votos: " + educacion.length + "<br>" + educacion.join("<br>");
+
+</script>
 
 </body>
 </html>
