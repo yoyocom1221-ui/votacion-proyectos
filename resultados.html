@@ -34,6 +34,15 @@ margin:20px;
 border-radius:10px;
 }
 
+button{
+padding:10px 20px;
+background:red;
+border:none;
+color:white;
+cursor:pointer;
+border-radius:5px;
+}
+
 </style>
 
 </head>
@@ -58,19 +67,42 @@ border-radius:10px;
 
 <div class="resultado">
 
-<h2>Servicio Militar Obligatorio</h2>
-
-<p id="militar"></p>
+<h2>PAE proyecto de acogida para niños especiales</h2>
+<p id="pae"></p>
 
 </div>
 
 <div class="resultado">
 
-<h2>Proyecto Educación Nacional</h2>
-
-<p id="educacion"></p>
+<h2>Proyecto de prevención y acogida para niños y niñas indigentes</h2>
+<p id="indigentes"></p>
 
 </div>
+
+<div class="resultado">
+
+<h2>Empleo Digno y Primera Inserción Laboral</h2>
+<p id="empleo"></p>
+
+</div>
+
+<div class="resultado">
+
+<h2>Proyecto de Exoneración Estudiantil</h2>
+<p id="exoneracion"></p>
+
+</div>
+
+<div class="resultado">
+
+<h2>Servicio Militar Obligatorio Para Jóvenes</h2>
+<p id="militar"></p>
+
+</div>
+
+<br>
+
+<button onclick="borrarVotos()">Eliminar votos</button>
 
 <script>
 
@@ -91,15 +123,36 @@ location.href="index.html";
 
 }
 
-let militar = JSON.parse(localStorage.getItem("militar")) || [];
+function mostrarResultados(){
 
-let educacion = JSON.parse(localStorage.getItem("educacion")) || [];
+let proyectos = ["pae","indigentes","empleo","exoneracion","militar"];
 
-document.getElementById("militar").innerHTML =
-"Votos: " + militar.length + "<br>" + militar.join("<br>");
+proyectos.forEach(p=>{
 
-document.getElementById("educacion").innerHTML =
-"Votos: " + educacion.length + "<br>" + educacion.join("<br>");
+let votos = JSON.parse(localStorage.getItem(p)) || [];
+
+document.getElementById(p).innerHTML =
+"Votos: " + votos.length + "<br>" + votos.join("<br>");
+
+});
+
+}
+
+function borrarVotos(){
+
+localStorage.removeItem("pae");
+localStorage.removeItem("indigentes");
+localStorage.removeItem("empleo");
+localStorage.removeItem("exoneracion");
+localStorage.removeItem("militar");
+
+alert("Votos eliminados");
+
+location.reload();
+
+}
+
+mostrarResultados();
 
 </script>
 
